@@ -2,6 +2,7 @@ package chans
 
 import kotlinx.serialization.json.Json
 import observer.MutableObservable
+import observer.Observable
 import java.io.File
 
 // Реализация паттерна Singleton.
@@ -49,11 +50,14 @@ class ChansRepository private constructor() {
         get() = Json.decodeFromString<List<ChanModel>>(file.readText().trim())
 
     // Наблюдаемые объекты.
-    val mutableObservableChans = MutableObservable(
-        initialValue = chans
-    )
-    val mutableObservableBestChan = MutableObservable(
-        initialValue = chans.singleOrNull { it.name == "Angelica" })
+    val mutableObservableChans: Observable<List<ChanModel>>
+        field = MutableObservable(
+            initialValue = chans
+        )
+
+    val mutableObservableBestChan: Observable<ChanModel?>
+        field = MutableObservable(
+            initialValue = chans.singleOrNull { it.name == "Angelica" })
 
     fun addChan(chanModel: ChanModel) {
         file.writeText(Json.encodeToString(chans + chanModel))
