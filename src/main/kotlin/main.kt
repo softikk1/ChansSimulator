@@ -11,7 +11,7 @@ val registrationModel = RegistrationModel(
 
 fun main() {
     val chanDisplay = ChanDisplay().apply { show() }
-    val bestChanDisplay = BestChanDisplay().apply { show() }
+//    val bestChanDisplay = BestChanDisplay().apply { show() }
 
     val chansRepository = ChansRepository.getInstance(registrationModel)
     while (true) {
@@ -22,7 +22,7 @@ fun main() {
         when (command) {
             Commands.EXIT -> {
                 chanDisplay.jFrame.dispose()
-                bestChanDisplay.jFrame.dispose()
+//                bestChanDisplay.jFrame.dispose()
                 break
             }
             Commands.ADD_CHAN -> {
