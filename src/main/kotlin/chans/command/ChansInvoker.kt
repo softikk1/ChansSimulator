@@ -6,8 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.thread
 
 // Реализация Invoker-а.
-object UserInvoker : Invoker {
+object ChansInvoker : Invoker<ChansCommands> {
     private val commands = LinkedBlockingQueue<Command>()
+
     init {
         thread {
             while (true) {
@@ -16,7 +17,8 @@ object UserInvoker : Invoker {
             }
         }
     }
-    override fun addCommand(command: Command) {
+
+    override fun addCommand(command: ChansCommands) {
         commands.add(command)
     }
 }

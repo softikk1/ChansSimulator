@@ -1,7 +1,8 @@
 import chans.ChanModel
 import chans.ChansRepository
 import chans.RegistrationModel
-import chans.observers.BestChanDisplay
+import chans.command.ChansCommands
+import chans.command.ChansInvoker
 import chans.observers.ChanDisplay
 import kotlin.random.Random
 
@@ -18,23 +19,25 @@ fun main() {
         print(Commands.entries.joinToString(", ") {
             it.text
         } + ": ")
-        val command = Commands.entries[readln().toInt()]
-        when (command) {
+        when (Commands.entries[readln().toInt()]) {
             Commands.EXIT -> {
                 chanDisplay.jFrame.dispose()
 //                bestChanDisplay.jFrame.dispose()
                 break
             }
+
             Commands.ADD_CHAN -> {
                 print("Enter chan name: ")
                 val chanName = readln()
-                chansRepository.addChan(
-                    ChanModel(
-                        id = (chansRepository.chans.lastOrNull()?.id ?: 0) + 1,
-                        name = chanName,
-                        age = (15..20).random(),
-                        height = (150..200).random(),
-                        tsundere = Random.nextBoolean()
+                ChansInvoker.addCommand(
+                    command = ChansCommands.CreateChan(
+                        repository = chansRepository, chanModel = ChanModel(
+                            id = (chansRepository.chans.lastOrNull()?.id ?: 0) + 1,
+                            name = chanName,
+                            age = (15..20).random(),
+                            height = (150..200).random(),
+                            tsundere = Random.nextBoolean()
+                        )
                     )
                 )
             }
@@ -42,7 +45,11 @@ fun main() {
             Commands.DEL_CHAN -> {
                 print("Enter chan id: ")
                 val chanId = readln().toLong()
-                chansRepository.deleteChan(chanId)
+                ChansInvoker.addCommand(
+                    command = ChansCommands.DeleteChan(
+                        repository = chansRepository, chanId = chanId
+                    )
+                )
             }
         }
     }

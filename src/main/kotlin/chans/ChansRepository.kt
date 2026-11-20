@@ -1,13 +1,9 @@
 package chans
 
-import chans.command.UserInvoker
-import command.Command
 import kotlinx.serialization.json.Json
 import observer.MutableObservable
 import observer.Observable
 import java.io.File
-import java.util.concurrent.LinkedBlockingQueue
-import kotlin.concurrent.thread
 
 // Реализация паттерна Singleton.
 // Репозиторий для взаимодействия наблюдателя и наблюдаемого объекта.
@@ -64,22 +60,18 @@ class ChansRepository private constructor() {
             initialValue = chans.singleOrNull { it.name == "Angelica" })
 
     fun addChan(chanModel: ChanModel) {
-        UserInvoker.addCommand {
-            file.writeText(Json.encodeToString(chans + chanModel))
-            Thread.sleep(5_000) // Имитация тяжелого процесса.
-            // Точка взаимодействия наблюдаемого объекта и наблюдателя.
-            mutableObservableChans.currentValue = chans
-            mutableObservableBestChan.currentValue = chans.singleOrNull { it.name == "Angelica" }
-        }
+        file.writeText(Json.encodeToString(chans + chanModel))
+        Thread.sleep(5_000) // Имитация тяжелого процесса.
+        // Точка взаимодействия наблюдаемого объекта и наблюдателя.
+        mutableObservableChans.currentValue = chans
+        mutableObservableBestChan.currentValue = chans.singleOrNull { it.name == "Angelica" }
     }
 
     fun deleteChan(chanId: Long) {
-        UserInvoker.addCommand {
-            Thread.sleep(5_000) // Имитация тяжелого процесса.
-            file.writeText(Json.encodeToString(chans.filter { it.id != chanId }))
-            // Точка взаимодействия наблюдаемого объекта и наблюдателя.
-            mutableObservableChans.currentValue = chans
-            mutableObservableBestChan.currentValue = chans.singleOrNull { it.name == "Angelica" }
-        }
+        Thread.sleep(5_000) // Имитация тяжелого процесса.
+        file.writeText(Json.encodeToString(chans.filter { it.id != chanId }))
+        // Точка взаимодействия наблюдаемого объекта и наблюдателя.
+        mutableObservableChans.currentValue = chans
+        mutableObservableBestChan.currentValue = chans.singleOrNull { it.name == "Angelica" }
     }
 }
